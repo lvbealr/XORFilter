@@ -54,16 +54,20 @@ func ProcessKeys() (*[]string, error) {
 	} else {
 		source := os.Args[1]
 		stream, err = os.Open(source)
+
 		if err != nil {
 			return nil, err
 		}
+
 		defer stream.Close()
 	}
 
 	input := bufio.NewScanner(stream)
+
 	for input.Scan() {
 		keys = append(keys, input.Text())
 	}
+
 	if err := input.Err(); err != nil {
 		return nil, err
 	}
@@ -77,6 +81,7 @@ func ProcessKeys() (*[]string, error) {
 // --------------------------------------------------------------------------------------------- //
 func InitializeXORfilter(keys []string) *XORfilter {
 	size := int(float64(len(keys))*1.23) + 32
+
 	if size < 3 {
 		size = 3 // Minimum size
 	}
@@ -97,7 +102,6 @@ func InitializeXORfilter(keys []string) *XORfilter {
 // computeHash computes a hash value for the given key, seed, and modifier.
 // --------------------------------------------------------------------------------------------- //
 func computeHash(key []byte, seedBytes []byte, modifier byte) uint64 {
-	// h := fnv.New64a()
 	h := xxhash.New()
 
 	h.Write(key)
@@ -138,6 +142,7 @@ func getHashes(filter *XORfilter, key []byte, seed uint64) [3]uint64 {
 func getFingerprintHash(key []byte, seed uint64) uint64 {
 	seedBytes := make([]byte, 8)
 	binary.LittleEndian.PutUint64(seedBytes, seed)
+
 	return computeHash(key, seedBytes, 3)
 }
 
@@ -152,9 +157,11 @@ func (filter *XORfilter) tryBuild() bool {
 
 	// Prepare mappings for each key
 	mappings := make([]Mapping, len(filter.Elements))
+
 	for i, key := range filter.Elements {
 		keyBytes := []byte(key)
 		h := getHashes(filter, keyBytes, filter.Seed)
+
 		mappings[i] = Mapping{
 			Key:         keyBytes,
 			H0:          h[0],
@@ -166,6 +173,7 @@ func (filter *XORfilter) tryBuild() bool {
 
 	// Count how many keys map to each position
 	count := make([]int, filter.Size)
+
 	for _, m := range mappings {
 		count[m.H0]++
 		count[m.H1]++
@@ -174,6 +182,7 @@ func (filter *XORfilter) tryBuild() bool {
 
 	// Initialize queue with singleton positions
 	queue := list.New()
+
 	for i, c := range count {
 		if c == 1 {
 			queue.PushBack(i)
@@ -182,6 +191,7 @@ func (filter *XORfilter) tryBuild() bool {
 
 	// Stack entries record order of removal
 	type peelEntry struct{ idx, pos int }
+
 	stack := make([]peelEntry, 0, len(mappings))
 	used := make([]bool, len(mappings))
 
@@ -204,6 +214,7 @@ func (filter *XORfilter) tryBuild() bool {
 						queue.PushBack(int(nh))
 					}
 				}
+
 				break
 			}
 		}
