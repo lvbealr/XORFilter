@@ -90,7 +90,9 @@ Size = floor(1.23 * len(Elements)) + 32
 
 3. **Построение фильтра**:
    - Алгоритм решает систему уравнений с использованием XOR, чтобы значения в ячейках `BitSet[H0]`, `BitSet[H1]` и `BitSet[H2]` удовлетворяли условию:
+
    $$BitSet[H0] \oplus BitSet[H1] \oplus BitSet[H2] = Fingerprint$$
+
    - Это достигается итеративным процессом, который назначает значения ячейкам, избегая конфликтов.
 
 ### Пример проверки наличия ключа
@@ -102,6 +104,7 @@ Size = floor(1.23 * len(Elements)) + 32
 
 2. **Выполнение XOR**:
    - Вычисляется:
+   
    $$result = BitSet[H0] \oplus BitSet[H1] \oplus BitSet[H2]
 
 3. **Сравнение**:
@@ -111,13 +114,9 @@ Size = floor(1.23 * len(Elements)) + 32
 
 Ниже представлена схема XOR-фильтра:
 
-<p align="center">
-    <figure>
-        <a href="" rel="noopener">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/XOR-Filter.svg/1042px-XOR-Filter.svg.png" align="center" width="30%" height="30%" alt="Структура XOR-фильтра"></a>
-        <figcaption style="text-align: center;">Рисунок 1. Схема структуры XOR-фильтра.</figcaption>
-    </figure>
-</p>
+<div style="text-align: center;">
+   <img src="https://i.ibb.co/zhw7c2qD/XOR-Filter-2-1.png" alt="Структура XOR-фильтра" width="150%" height="150%">
+</div>
 
 - Массив `BitSet` разделён на три блока.
 - Позиции `H0`, `H1`, `H2` показывают, куда отображается ключ.
@@ -296,7 +295,9 @@ Adding a key to the XOR filter involves the following steps:
 
 3. **Filter Construction**:
    - The algorithm solves an XOR-based system to ensure that the values in `BitSet[H0]`, `BitSet[H1]`, and `BitSet[H2]` satisfy:
+
      $$BitSet[H0] \oplus BitSet[H1] \oplus BitSet[H2] = Fingerprint$$
+
    - This is achieved through an iterative process that assigns values to cells while avoiding conflicts.
 
 ### Example of Checking Key Presence
@@ -307,6 +308,7 @@ To check if a key is in the filter:
    - For the key (e.g., `"key1"`), compute the same `H0`, `H1`, `H2`, and `Fingerprint` as during insertion.
 
 2. **XOR Operation**:
+
    $$result = BitSet[H0] \oplus BitSet[H1] \oplus BitSet[H2]$$
 
 3. **Comparison**:
@@ -316,13 +318,9 @@ To check if a key is in the filter:
 
 Below is a diagram of the XOR filter structure:
 
-<p align="center">
-    <figure>
-        <a href="" rel="noopener">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/XOR-Filter.svg/1042px-XOR-Filter.svg.png" align="center" width="30%" height="30%" alt="XOR filter structure"></a>
-        <figcaption style="text-align: center;">Figure 1. XOR filter structure.</figcaption>
-    </figure>
-</p>
+<div style="text-align: center;">
+   <img src="https://i.ibb.co/zhw7c2qD/XOR-Filter-2-1.png" alt="XOR filter structure" width="150%" height="150%">
+</div>
 
 - The `BitSet` array is divided into three blocks.
 - Positions `H0`, `H1`, `H2` indicate where the key is mapped.
